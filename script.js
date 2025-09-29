@@ -21,10 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('main-content');
     const contentPath = 'pages/'; // 假设内容文件在 'pages/' 文件夹中
 
+    // index标签里target与加载文件的映射关系
+    const fileMap = {
+        'home': 'home.html',
+        'algo': 'algorithm-summary.html',
+        'qiuzhao': 'qiuzhao.html', // 这里将 'projects' 映射到 'A.html'
+        'meiyong': 'meiyong.html'
+    };
+
     // 加载内容的函数
     async function loadContent(target) {
+        const fileName = fileMap[target]; // 根据 target 获取对应的文件名
+        if (!fileName) {
+            console.error(`未找到 ${target} 对应的文件名。`);
+            mainContent.innerHTML = `<p>加载内容失败，请稍后再试。</p>`;
+            return;
+        }
+
         try {
-            const response = await fetch(`${contentPath}content-${target}.html`);
+            const response = await fetch(`${contentPath}${fileName}`); // 使用映射后的文件名
             if (!response.ok) {
                 throw new Error(`无法加载 ${target} 内容: ${response.statusText}`);
             }
@@ -36,18 +51,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 处理导航点击事件
+    // 处理导航点击事件 (此部分不变)
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault(); // 阻止默认的链接跳转行为
+            e.preventDefault();
 
-            // 移除所有链接的active类
             navLinks.forEach(nav => nav.classList.remove('active'));
-            // 添加active类到当前点击的链接
             e.target.classList.add('active');
 
-            const target = e.target.dataset.target; // 获取data-target属性的值
-            loadContent(target); // 加载对应的内容
+            const target = e.target.dataset.target;
+            loadContent(target);
         });
     });
 
