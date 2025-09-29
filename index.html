@@ -10,23 +10,45 @@
     <header>
         <img src="images/logo.png" alt="Logo">
         <h1>欢迎来到我的个人主页</h1>
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" data-target="home">首页</a></li>
+                <li><a href="#" class="nav-link" data-target="about">关于我</a></li>
+                <li><a href="#" class="nav-link" data-target="projects">我的项目</a></li>
+                <li><a href="#" class="nav-link" data-target="contact">联系我</a></li>
+            </ul>
+        </nav>
     </header>
+
     <main>
-        <section>
+        <section id="home" class="content-section active">
+            <h2>欢迎</h2>
+            <p>这是我的首页内容。</p>
+        </section>
+
+        <section id="about" class="content-section">
             <h2>关于我</h2>
             <p>我是一名开发者，热爱编程和技术。</p>
         </section>
-        <section>
+
+        <section id="projects" class="content-section">
             <h2>我的项目</h2>
             <ul>
                 <li>项目 1</li>
                 <li>项目 2</li>
             </ul>
         </section>
+
+        <section id="contact" class="content-section">
+            <h2>联系我</h2>
+            <p>邮箱：example@example.com</p>
+        </section>
     </main>
+
     <footer>
         <p>&copy; 2023 我的个人主页</p>
     </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
