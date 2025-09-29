@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5; /* 可选：给登录页一个不同的背景色 */
+        }
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .login-container input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+        .login-container #error-message {
+            color: red;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none; /* 默认隐藏 */
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>请输入密码</h2>
+        <input type="password" id="passwordInput" placeholder="密码">
+        <button onclick="login()">登录</button>
+        <p id="error-message">密码错误，请重试。</p>
+    </div>
+
+    <script>
+        // 硬编码的密码，请注意这不安全，仅用于演示
+        const CORRECT_PASSWORD = "your_secret_password"; // **请将 'your_secret_password' 替换为你自己的密码**
+
+        function login() {
+            const passwordInput = document.getElementById("passwordInput");
+            const errorMessage = document.getElementById("error-message");
+            const enteredPassword = passwordInput.value;
+
+            if (enteredPassword === CORRECT_PASSWORD) {
+                // 密码正确，设置一个登录标志到 localStorage
+                localStorage.setItem("isLoggedIn", "true");
+                // 跳转到主页
+                window.location.href = "index.html";
+            } else {
+                // 密码错误，显示错误消息
+                errorMessage.style.display = "block";
+                passwordInput.value = ""; // 清空密码输入框
+            }
+        }
+
+        // 也可以通过回车键触发登录
+        document.getElementById("passwordInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                login();
+            }
+        });
+    </script>
+</body>
+</html>
