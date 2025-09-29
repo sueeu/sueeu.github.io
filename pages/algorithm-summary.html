@@ -1,18 +1,641 @@
-<h2>关于我</h2>
-<p>我是一名开发者，热爱编程和技术。</p>
-<p>我专注于Web开发，尤其擅长前端技术，如React、Vue和Angular。我也对后端开发有所涉猎，熟悉Node.js和Python。</p>
-<p>在业余时间，我喜欢阅读技术书籍，参加开源项目，并且探索新的编程语言和工具。我相信持续学习和分享是成为一名优秀开发者的关键。</p>
-<h3>我的技能</h3>
+<html><head><style>body {
+   color: black;
+}
+</style></head><body><h3 id="vector-">vector数组操作：双指针省去删除</h3>
+<p>双指针：常指数组下标，也有在链表里真是指针的。快慢（快慢）指针：fast, slow。string：大串，小串各一个，也算双指针。</p>
+<p>用处思路：省去删除：slow前都是确定结果，fast后都是待判断元素，中间的可以看做删除了，随意赋值。（相当于非擦除删除）。</p>
+<p>两个都指向有效值，越界交给循环条件或其他判断。</p>
+<p><em>双指针</em>：前后指针，根据当前和与目标值的比较情况判断移动前指针还是后指针。</p>
+<p>实现：</p>
+<p>语法tips: vector.erase(vetor.begin()+i) // 删除num[i]</p>
+<p>用处思路：fast先锋试错/判断，slow稳重保持结果。</p>
+<p><em>数组操作</em>：</p>
 <ul>
-    <li>前端: HTML5, CSS3, JavaScript (ES6+), React, Vue.js, Svelte, Webpack, Babel</li>
-    <li>后端: Node.js, Express, Python, Django, Flask, RESTful APIs</li>
-    <li>数据库: MongoDB, PostgreSQL, MySQL, SQLite</li>
-    <li>工具: Git, Docker, VS Code, npm, yarn</li>
+<li>遍历法时间O(n(n+1)/2)=O(n^2)太大，考虑降低时间，可空间换时间，即O(n+n*logn)=O(nlogn)。二分查找将n里的循环由(n+1)/2降为logn。</li>
+<li>滑动窗口（也是一种快慢指针）：快慢指针所夹元素和满足taerget时尽量保证短，一次遍历即可。还是滑动窗口好使，满足结果再结算。</li>
 </ul>
-<h3>我的兴趣</h3>
+<p>双指针：快慢指针也不错，逆向遍历，快慢指针夹住一个单词用substr提取到结果中，一次遍历即可，空间还小。<em>vector函数使用</em>：</p>
+<p>sort()可以直接对二维vector排序，[0]相等比[1]，默认升序。
+也可以自定义。</p>
+<pre><code><span class="hljs-keyword">sort</span>(intervals.begin(), intervals.end(), [](<span class="hljs-keyword">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; a, <span class="hljs-keyword">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; b) {
+            <span class="hljs-keyword">return</span> a[<span class="hljs-number">0</span>] &lt; b[<span class="hljs-number">0</span>];
+        }); <span class="hljs-comment">//一定注意要严格小于/大于，否则对sort这个参数来说报错Undefined Behavior。</span>
+</code></pre><h3 id="-tips-">通用语法tips:</h3>
+<p> reverse(it1, it2) // e.g. v.begin(), v.end()</p>
+<p>Tips：int a,b=0;只是b=0, a仍是野的。应该int a=0, b=0;</p>
+<p>构造函数name(int a): A(a) {}....</p>
+<p>C++的取随机数好麻烦。。</p>
+<pre><code>        random_device rd; <span class="hljs-comment">// 用于获取随机种子</span>
+        mt19937 <span class="hljs-keyword">gen</span>(rd()); <span class="hljs-comment">// 使用梅森旋转算法引擎</span>
+        <span class="hljs-comment">// 定义随机数分布（生成 1 到 100 之间的整数）</span>
+        uniform_int_distribution&lt;&gt; <span class="hljs-keyword">dis</span>(0, v.size()-1);
+        Int random = <span class="hljs-keyword">dis</span>(<span class="hljs-keyword">gen</span>);
+</code></pre><p>数组原理：最长降序子序列头尾差值 &lt; 其包含区间分裂的最短降序子序列差值和。</p>
+<p>sort记greater使用时，记住要填一个对象，同时是函数对象，故为类似容器的定义并加()表明函数身份：sort(xx,xx, greater<int>());</p>
 <ul>
-    <li>开源项目贡献</li>
-    <li>学习新的编程语言</li>
-    <li>徒步和户外活动</li>
-    <li>摄影</li>
+<li>迭代器：本质可以看做是指针。当然不全是指针</li>
 </ul>
+<pre><code>auto <span class="hljs-keyword">it</span> = xx.begin/<span class="hljs-keyword">end</span>/find()<span class="hljs-comment"> // auto类型最方便，我用到的所有容器都有begin/end，find返回也都是it。</span>
+<span class="hljs-keyword">it</span>++/<span class="hljs-comment">-- // 直接切换到下/上一个it</span>
+\*<span class="hljs-keyword">it</span><span class="hljs-comment"> //访问it内的元素</span>
+<span class="hljs-keyword">it</span>-&gt;<span class="hljs-keyword">first</span>/<span class="hljs-keyword">second</span><span class="hljs-comment"> // map才有f/s，看做成员变量</span>
+</code></pre><ul>
+<li>set/map都是有序的，红黑树存。添加是<strong><em>插入insert</em></strong>不是push，删除是erase。</li>
+<li>pair<type,type>也可以看做个小struct。初始化可p(1, 2)，也可p = {1, 2}。成员是first, second。</li>
+<li>新for：注意不是迭代器。（当然it也能for）基本所有容器都能用，queue,vector,map,set等</li>
+</ul>
+<pre><code><span class="hljs-comment">// for(auto&amp; temp : choice) 深拷贝，可该值</span>
+<span class="hljs-built_in">for</span>(<span class="hljs-keyword">auto</span> temp : choice){ <span class="hljs-comment">// 这种方式底层是迭代器，但temp不是it，直接是值，且是浅拷贝。</span>
+           <span class="hljs-built_in">if</span>(<span class="hljs-built_in">available</span>.<span class="hljs-built_in">find</span>(temp) != <span class="hljs-built_in">available</span>.<span class="hljs-built_in">end</span>()){
+               <span class="hljs-built_in">available</span>.erase(temp);
+               recur(temp, grid);
+           }
+       }
+</code></pre><p>tip：看到node复杂的<strong><em>构造函数</em></strong>，想到也要记得构造函数咋写。例如struct
+struct A{
+int val;
+A(int v){ //这种和普通函数更统一，实在想不起来或者懒得想这么写也没问题
+val=v;
+}
+A(int v): val(v) {} // 这种更正规常见，就是<strong><em>：成员变量（值）</em></strong>的写法仅此函数一种，时间长就忘了
+}</p>
+<h3 id="-">数学原理：</h3>
+<p>多数元素：出现次数大于len/2的数。其可与所有其余数一换一还剩。</p>
+<p>取某位值：num%10取当前数字的个位数；num/10去掉当前的个位数；重复直到num为0。</p>
+<p>快乐数：核心在找是否进入重复循环。找重复想到搜索：快速搜索哈希map是个不错的选择。找循环快慢指针也很吊：快指针走两步，慢指针走一步，相遇即循环了。</p>
+<p><em>快速幂</em>：
+实在想不起来就只n/2循环，也能在时间范围内结束。</p>
+<p>快速幂：分治思想：抽丝剥茧。</p>
+<ul>
+<li>核心：要求n次方，只要两个n/2次方相乘。保证n是正数。</li>
+<li><p>细节：</p>
+</li>
+<li><p>n是奇数了就n/2向下取整，得到结果平方后再乘一个x就行</p>
+</li>
+<li>n边界可1可0</li>
+<li>n是负数先取反，但注意如果n是int，INT_MIN比INT_MAX长一个，取反会溢出，所以要么long long存n，要么对INT_MIN单独考虑，先取半（INT_MIN是偶数），再取反。</li>
+</ul>
+<p><em>整数平方根</em>：二分查找。大于4的x平方根肯定小于x/2，这样一直除以2进行迭代，直到出现第一个大于x的temp，在此界内一个一个试。。（我这样是固定了上届一直找下界）。
+正规的：下界0上界x，取中间值平方，大了上界左移，小了下界右移。
+<strong><em>要想起来long long防溢出！</em></strong>临时结果可用long long存。</p>
+<h3 id="-">贪心：</h3>
+<p>无定式，就是局部最优尝试全局最优。遇到题可以先试试，常常不需要证明，管用就行。</p>
+<h3 id="-string-"><em>string语法</em></h3>
+<ul>
+<li>新式for(aotu s : string){}</li>
+<li>char加减比较，string不可加减。string在C++11也被算入STL，用法可同STL内其他容器。例如push_back()（当然s=s1+s2还是可以用的）。</li>
+<li>ASCALL码表：大写小，小写大，相差32</li>
+<li>子序列不连续，子串连续。</li>
+<li>to_string(int)</li>
+<li><em>string操作</em>：
+1、取子串：.substr(a,b); // 从a（0起计）取b个，没b就是取完。返回结果。熟悉substr用法：s.substr(起始id（含）， 子串长度)。
+2、还是正确的迭代框架：对临时结果temp，先结算再更新。</li>
+</ul>
+<p><em>KMP</em>。
+搜索过程是相等了
+还是不理解next的生成过程。next含义是我( i )死了把指针更新成next的再试。
+想哭。
+字符串匹配：在大串big里找小串small，返回位置。（大串&gt;=小串，叫着顺口）。newSlow（一般叫next），用处是小串slow处没救了，换成newSlow[slow]处试试。原理是小串里的当前子串的最长公共前后缀。
+还有复杂度：搜O(m)，建表O(n)，合计O(m+n)</p>
+<pre><code><span class="hljs-comment">// 创建newSlow。递归？ </span>
+
+
+<span class="hljs-comment">// 正式进行搜索</span>
+                <span class="hljs-keyword">int</span> fast=<span class="hljs-number">0</span>; <span class="hljs-comment">// 大串指针</span>
+        <span class="hljs-keyword">int</span> slow=<span class="hljs-number">0</span>; <span class="hljs-comment">//小串指针</span>
+        <span class="hljs-built_in">while</span>(fast&lt; big.<span class="hljs-built_in">size</span>() &amp;&amp; slow&lt;small.<span class="hljs-built_in">size</span>()){
+            <span class="hljs-built_in">if</span>(big[fast] == small[slow]){ <span class="hljs-comment">// 相等则共同进步</span>
+                fast++;
+                slow++;
+            }<span class="hljs-built_in">else</span> <span class="hljs-built_in">if</span>(slow==<span class="hljs-number">0</span>){ <span class="hljs-comment">// 小串头都不行了，大串不用等了，直接下一个。</span>
+                fast++;
+            }<span class="hljs-built_in">else</span>{
+                slow = newSlow[slow<span class="hljs-number">-1</span>]; <span class="hljs-comment">// 大串先别动，小串更新下还有救，再试试。 注意理解后这里更新应该是slow-1还是slow</span>
+            }
+        }
+</code></pre><h3 id="stack-">stack容器：</h3>
+<p>pop, push, top, empty</p>
+<p>简化路径<em>栈使用</em>：看到目录的进出规则想到了用栈，也想到直接划分两个//中间的为目录名。没想到栈里只存目录，确实，/都是框架，实质还是目录顺序摆好自己输出结果就好。
+说明对栈的操作敏感（先进后出的操作的使用场景），但是顿感栈的对象（惯性于存储直接结果），应该想到存储本质结果。这样操作于存储都很清晰。
+所以对栈：
+1、想到用栈：比较简单。
+2、栈存什么：直接结果 or 本质结果
+3、何时出入：尤其出栈记得判空</p>
+<p>循环(for/while)迭代框架。结算和更新都是操作临时结果temp。
+<strong><em>总之迭代框架类似递归框架：先结算temp再更新temp。</em></strong>
+<code>if(结算条件){ 结算操作：将临时结果结算入正式结果，即修成正果。 } else { 更新临时结果。 }</code>
+1、结算：结算对象可能是i对象：num[i]，也可能是多轮迭代积累起来的某个临时结果temp，或其他。
+<strong><em>对临时结果的结算</em></strong>：结算操作就是<em>达到结算条件</em>后让temp修成正果，并入正式结果。
+2、更新：不达结算时，<strong><em>对临时结果的积累</em></strong>，i对象或者temp或者其他。</p>
+<p><em>栈使用类型</em>，先进后出自然想到栈，只是空间有点大。</p>
+<h3 id="-map-set-">哈希与map, set：</h3>
+<p>map：应用场景：单向映射。搜索用到的容器优化：频繁搜索首想map，但是如果“键”可规律地转为Int且 值 单一，那用数组也不错，即arr[转为int的键] = 值。</p>
+<p>哈希本身只是一种思想：元素x哈希后得到哈希地址，放在地址处，实现O(1)的增删改查。人不用纯的hash。
+基于哈希实现的两种容器map和set才是常用的，底层hash不用管。二者体现在哈希上的区别在map是用key hash后放val，set则是用val hash后放val。这些只是原理，使用时完全不用管。</p>
+<p><em>哈希思想</em>：还是用的map。想提高搜索效率哈希map不错，O(1)。</p>
+<ul>
+<li>find可以是map的函数：auto it = map.find(键)；返回的迭代器，没找到是end()，找到了it-&gt;first是键，second是值。</li>
+<li>理论上map是一对一，一对多也想用map的话也行，把多存为一个数组什么的就成一了，e.g. map<int, vector<int>&gt;，只不过这题正好用不到。</li>
+</ul>
+<p>map：单向唯一性。
+set：值唯一性。</p>
+<p>当然了哈希方法只要体现出来先hash出地址再放入就算，不一定非要用到map/set</p>
+<p><em>对容器的敏感</em>：map O(1)增删，vector O(1)取，map值存id则与vector结合。
+tips:
+1、map的由于增删查快，自已有find。vetor,queue,stack都没有find。</p>
+<p>set可去重可遍历</p>
+<h3 id="-">堆：</h3>
+<p><em>堆操作</em>：
+完全二叉树：每层从左到右放节点，满二叉树是一种特例。通常用<strong>数组</strong>存就行，不用链表，i的左孩子是2i+1，右孩子是2i+2。(i从0起)
+堆定义：首先是完全二叉树，然后根节点最大/小，所有子树也都是堆-&gt;最大堆/最小堆。</p>
+<ul>
+<li>C++没有容器heap，但是有优先队列priority_queue（就是排好序的队列，但遍历不是严格排序，因为是堆），就是堆的思想，用也是按堆用。（就很奇怪为啥不叫heap算了）。说白了priority_queue就是堆。，简记为pq。</li>
+<li>自动挡堆：纯元素起步。priority_queue，底层是vector实现的，但仍是队列，不能下标取值。</li>
+</ul>
+<blockquote>
+<p>priority_queue<int, vector<int>, greater<int>&gt; maxHeap; //greater最小堆，sort(greater<int>())就是降序，很奇怪。最小堆时vector<int>不可少
+priority_queue<int> maxHeap; //默认最大堆
+maxHeap.push(1);
+maxHeap.top();
+maxHeap.pop();</p>
+</blockquote>
+<ul>
+<li>半自动挡堆：已有容器。对STL容器实行手动维护实现堆</li>
+</ul>
+<blockquote>
+<p>//建堆
+vector<int> vec; //将vec维护成一个堆
+make_heap(vec.begin(), vec.end()); // 将vec建成堆，默认最大堆 。最小堆：make_heap(vec.begin(), vec.end(), greater<int>())
+//入堆
+vec.push_back(1);
+push_heap(vec.begin(), vec.end()); //vec尾元素视为新元素，插入堆。
+//出堆
+pop_heap(vec.begin(), vec.end()); //堆顶元素移到尾，视为弹出堆。
+vec.pop_back(); // 移除末尾元素</p>
+</blockquote>
+<ul>
+<li>手动挡堆：可纯元素可有容器，全手动,。利用一个内部维护函数maintain实现增删建堆，我认为比上沉下浮好理解。</li>
+</ul>
+<pre><code>    <span class="hljs-comment">//手动挡建堆</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">maintainHeap</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums, <span class="hljs-keyword">int</span> left, <span class="hljs-keyword">int</span> right, <span class="hljs-keyword">int</span> root)</span></span>{
+        <span class="hljs-comment">//左右子树已是堆，调整根，使得本树也为最大堆</span>
+        <span class="hljs-keyword">if</span>(left&gt;nums.size()<span class="hljs-number">-1</span>){ <span class="hljs-comment">//非叶子节点必有左孩子，没有就是叶子节点，不用维护</span>
+            <span class="hljs-keyword">return</span>;
+        }<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(right&gt;nums.size()<span class="hljs-number">-1</span>){ <span class="hljs-comment">//只有左没有右就是最底层非叶子，不用维护子树</span>
+            <span class="hljs-keyword">if</span>(nums[left] &gt; nums[root]){
+                <span class="hljs-keyword">int</span> temp = nums[root];
+                nums[root] = nums[left];
+                nums[left] = temp;
+                <span class="hljs-keyword">return</span>;
+            }<span class="hljs-keyword">else</span>{
+                <span class="hljs-keyword">return</span>;
+            }
+        }
+        <span class="hljs-keyword">if</span>(nums[left] &gt; nums[root] &amp;&amp; nums[left]&gt;=nums[right]){<span class="hljs-comment">//左孩子上位，注意左右不不要都严格大于，否则相等时都上不了位</span>
+            <span class="hljs-keyword">int</span> temp = nums[root];
+            nums[root] = nums[left];
+            nums[left] = temp;
+            maintainHeap(nums,<span class="hljs-number">2</span>*left+<span class="hljs-number">1</span>, <span class="hljs-number">2</span>*left+<span class="hljs-number">2</span>, left);
+        }<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(nums[right] &gt; nums[root] &amp;&amp; nums[right]&gt;nums[left]){<span class="hljs-comment">//右孩子上位</span>
+            <span class="hljs-keyword">int</span> temp = nums[root];
+            nums[root] = nums[right];
+            nums[right] = temp;
+            maintainHeap(nums,<span class="hljs-number">2</span>*right+<span class="hljs-number">1</span>, <span class="hljs-number">2</span>*right+<span class="hljs-number">2</span>, right);            
+        }
+    }
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">buildHeap</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums)</span></span>{
+        <span class="hljs-keyword">int</span> iniRoot = nums.size()/<span class="hljs-number">2</span> - <span class="hljs-number">1</span>; <span class="hljs-comment">// 从最后的非叶子节点维护，以索引计：n/2-1</span>
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = iniRoot; i&gt;=<span class="hljs-number">0</span>;i--){ <span class="hljs-comment">//把孩子越界的判断统统交给maintain完成</span>
+            maintainHeap(nums,<span class="hljs-number">2</span>*i+<span class="hljs-number">1</span>, <span class="hljs-number">2</span>*i+<span class="hljs-number">2</span>,i); <span class="hljs-comment">//以索引计：左2i+1，右2i+2</span>
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">pop</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums)</span></span>{ <span class="hljs-comment">//出堆：删掉头元素，尾元素放堆顶，再维护一下此树</span>
+        nums[<span class="hljs-number">0</span>] = nums.back();
+        nums.pop_back();
+        maintainHeap(nums,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">0</span>); 
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">push</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums, <span class="hljs-keyword">int</span> v)</span></span>{ <span class="hljs-comment">//入堆：元素加到队尾，当做新vector重新build</span>
+        nums.push_bacK(v);
+        <span class="hljs-keyword">int</span> iniRoot = nums.size()/<span class="hljs-number">2</span> - <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = iniRoot; i&gt;=<span class="hljs-number">0</span>;i--){
+            maintainHeap(nums,<span class="hljs-number">2</span>*i+<span class="hljs-number">1</span>, <span class="hljs-number">2</span>*i+<span class="hljs-number">2</span>,i);
+        }
+    }
+</code></pre><p><em>全自动堆使用</em>：
+最小堆priority_queue<int, vector<int>, greater<int>&gt; pq（或者叫minHeap都行）。
+最大堆priority_queue<int> pq。
+push(a); pop(); top();
+要查找pq的特定元素，只能循环遍历。</p>
+<pre><code>答案思想：两<span class="hljs-built_in">stack</span>，一个装元素，另一个装该元素存在时对应的最小值。
+</code></pre><p><em>堆的使用</em>
+全自动堆是pq（priority_queue），半自动堆才是make_heap那一堆。
+全自动堆使用加强：</p>
+<ul>
+<li><p>定义：priority_queue<int, vector<int>, compare&gt; pq;</p>
+</li>
+<li><p>pq本身不像queue是容器，需要容器</p>
+</li>
+<li>不表明容器默认vector，<strong><em>不用默认比较必须表明容器。</em></strong></li>
+<li>默认最大堆。最小堆：greater<int>，区别sort，pq是模版sort是函数，故<strong><em>sort里greater<int>(), pq里greater<int>没括号。</em></strong></li>
+<li><strong><em>自定义比较模版：struct 直接类名；重载operator()函数，注意()也是类名一部分；&gt;是最小堆，&lt;是最大堆。</em></strong></li>
+</ul>
+<pre><code>    struct compare{
+        bool operator()(const <span class="hljs-keyword">node</span><span class="hljs-title">&amp; a</span>, const <span class="hljs-keyword">node</span><span class="hljs-title">&amp; b</span>) {
+            return a.val &gt; b.val; // 最小堆
+        }
+    };
+</code></pre><h3 id="-">指针与结构体语法：</h3>
+<ul>
+<li>指针与对象</li>
+</ul>
+<pre><code><span class="hljs-keyword">int</span>* p; <span class="hljs-comment">//指向int类型的指针p，int* p与int *p定义时完全相同</span>
+<span class="hljs-keyword">int</span> x=<span class="hljs-number">1</span>;
+p =&amp;x; <span class="hljs-comment">//p本身存储指向目标的地址，所以赋值时需要对象x的地址，用到取址符</span>
+<span class="hljs-built_in">cout</span>&lt;&lt;p; <span class="hljs-comment">//打印的地址 0x783456</span>
+<span class="hljs-built_in">cout</span>&lt;&lt;*p; <span class="hljs-comment">// *相当与解引用，打印指向对象x的值。</span>
+</code></pre><ul>
+<li>指针与结构体</li>
+</ul>
+<pre><code>struct <span class="hljs-keyword">node</span> <span class="hljs-title">{
+    int</span> val;
+    <span class="hljs-keyword">node</span><span class="hljs-title">* next</span>; //next指针指向<span class="hljs-keyword">node</span><span class="hljs-title">类型对象
+        void</span> print(){
+        cout<span class="hljs-tag">&lt;&lt;"hello";
+        }
+};
+node* nodeP;
+struct node N;
+nodep = &amp;N;//指向直接定义的对象N时，同上也需要&amp;取址赋值给指针
+nodeP = new node(); //指向new构造的对象时，由于new本身返回的就是指向新对象的指针，故可直接赋值给指针。new不同点在其生命周期超出定义域，要手动delete，常见于链表。
+
+N.val; N.print(); //结构体对象N使用 . 调用成员（变量或函数）
+nodeP-&gt;</span>val; <span class="hljs-keyword">node</span><span class="hljs-title">-&gt;print</span>(); //结构体指针nodeP使用 -&gt; 调用成员（变量或函数），nodeP-&gt; 相当与 (*nodeP). 先解引用再调用。
+</code></pre><h3 id="-">二叉树：</h3>
+<p>遍历：</p>
+<ul>
+<li>广度优先遍历（层次遍历）：队列。使用队列规范节点顺序，队列并不保存结果。队列<node*>：当前节点出，左右非空子节点依次进，直到队列为空搜索结束。层次遍历的队列还是节点类型，还得是不放空节点。收集层次信息的关键在于将子节点放入队列的操作体现了层次加1，int保存/另开队列保存均可。层次遍历的考点还是层信息的提取和利用。</li>
+<li>深度优先遍历：递归还是快，return可int可bool（根据具体要求）。喜欢递归！</li>
+<li>层序遍历，或者说树遍历时注意不要把当前节点node写成root。</li>
+</ul>
+<p><em>层序遍历</em>：
+tip：
+1、queue，保存并利用层信息。
+2、哑结点dummy真好用。
+3、层序遍历利用同层结点还可以学一下循环套循环：while套for：</p>
+<pre><code>q.<span class="hljs-keyword">push</span>(root);
+<span class="hljs-keyword">while</span> (!q.empty()) {
+    <span class="hljs-keyword">int</span> n = q.<span class="hljs-keyword">size</span>(); <span class="hljs-comment">// n取出来就是当前层的节点数量</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        auto f = q.front();
+        q.<span class="hljs-keyword">pop</span>();
+        <span class="hljs-comment">// 拓展新节点</span>
+        <span class="hljs-keyword">if</span> (f-&gt;left) {
+            q.<span class="hljs-keyword">push</span>(f-&gt;left);
+        }
+        <span class="hljs-keyword">if</span> (f-&gt;right) {
+            q.<span class="hljs-keyword">push</span>(f-&gt;right);
+        }
+        <span class="hljs-comment">// ... 遍历当前取出的 f</span>
+    }
+}
+</code></pre><p><em>树操作</em>：递归地构造树+二分法。
+再熟悉一下标准二分法的要点：</p>
+<ul>
+<li>left，right都是好点，mid=(left+right)/2左倾中分。</li>
+<li>循环中其实是mid分裂向两边mid-1, mid+1作为新的right, left，最初的left, right“没动”。</li>
+<li>循环结束条件是left&gt;right，因为left, mid, right都是好点，故只要left&lt;=right本循环内不会越界，mid分裂进下一循环后才可能right越过left。</li>
+</ul>
+<p>对称二叉树：</p>
+<p><em>树常识</em>。本题就翻转一边对比就行。
+错误1：根的左子树左中右遍历，根的右子树右中左遍历，遍历结果二者相等则对称。这是错的！因为单个前/后/中序遍历（左中右，右中左都是中序）是确定不了一颗树的。
+错误2：层序遍历中，能够获得真节点（非空节点）的层信息，但是对空节点的处理很有限，难以占位，尤其是空了好几层的占位。</p>
+<p>可以一个递归解决问题。
+递归：定义递归最好按这个顺序来，前一条有助于后一条。
+1、定参数与返回值。参数是进行比较的两个数上的节点，返回bool相等否
+2、终止条件。<strong>注意写递归先终止条件再写递归逻辑，防止思路混乱</strong>。树节点先判空。<strong>相当于将判空交给终止条件，而不是传参时防空，即传参少管，传参可空。</strong>
+3、递归逻辑。值相同且左右子树“对称。</p>
+<p>迭代的思路也类似：循环内，先判结算条件，再进行对象积累。将对象积累简单直接，将判空等操作交给开头的结算条件解决。</p>
+<p>可借map存父节点。</p>
+<p>二叉搜索树：注意：左右子树皆满足小中大且自己和左右孩子满足小中大是不够的，还要左子树最大&lt;自己&lt;右子树最小。</p>
+<p>前/中序构造二叉树：<em>又是递归在树的应用</em>
+思路上：当前树在两序中的范围-&gt;前序确定root位置-&gt;中序确定左右子树长度-&gt;左右子树在两序中的范围-&gt;进入递归。
+实现上：</p>
+<ul>
+<li><strong><em>在递归里/非主函数里定义结果要用到的指针时，一定一定要new而不是简单定义一个对象</em></strong>，因为对象生命周期仅在函数里，该函数回收后对象也回收了，所以要长久还得new。</li>
+<li>确定边界时可以先定长度在定边界，思路清晰些。</li>
+</ul>
+<h3 id="-">二分查找</h3>
+<pre><code class="lang-C++"><span class="hljs-built_in">int</span> searchInsert(<span class="hljs-built_in">int</span>* nums, <span class="hljs-built_in">int</span> numsSize, <span class="hljs-built_in">int</span> target) { // 迭代写法。后续还能递归写法，感觉递归更清晰
+    <span class="hljs-built_in">int</span> <span class="hljs-built_in">left</span>=<span class="hljs-number">0</span>,<span class="hljs-built_in">right</span>=numsSize-<span class="hljs-number">1</span>; // 左右均为好点
+    while(<span class="hljs-built_in">left</span>&lt;=<span class="hljs-built_in">right</span>){ // 只有烂完了：<span class="hljs-built_in">left</span>&gt;<span class="hljs-built_in">right</span>才结束：右超左结束循环，与右容易左移相配套。 
+        <span class="hljs-built_in">int</span> <span class="hljs-built_in">mid</span>=(<span class="hljs-built_in">left</span>+<span class="hljs-built_in">right</span>)/<span class="hljs-number">2</span>; // 弹道偏左：<span class="hljs-built_in">int</span>除法向零取整，不是四舍五入，
+        <span class="hljs-built_in">if</span>(nums[<span class="hljs-built_in">mid</span>]&lt;target){
+            <span class="hljs-built_in">left</span>=<span class="hljs-built_in">mid</span>+<span class="hljs-number">1</span>;
+        }else{ //即使相等右也左移，与循环条件匹配。
+            <span class="hljs-built_in">right</span>=<span class="hljs-built_in">mid</span>-<span class="hljs-number">1</span>;
+        }
+    }
+    return <span class="hljs-built_in">left</span>; // 右左移条件多，左移先不动，指为目标。
+}
+</code></pre>
+<p><strong>二分查找复习</strong> 本题本质还是二分查找。
+二分查找的实现我已经炉火纯青了！^_^ 。对时间O(logn)敏感点
+要点：</p>
+<ul>
+<li>l,r都好指针，即闭区间</li>
+<li>mid = (l+r)/2 弹道偏左</li>
+<li>递归实现。 临界条件是 l==r 直接返回值（这样l就加不到r右边，不用l&gt;r了）。</li>
+</ul>
+<p>还能直接调封装好的啊：（感觉还是麻烦，自己写可能都比想这个调用快。。。）</p>
+<pre><code><span class="hljs-keyword">bool</span> f = binary_search(nums.<span class="hljs-built_in">begin</span>(), nums.<span class="hljs-built_in">end</span>(), target); <span class="hljs-comment">//迭代器用法，只返回存在否</span>
+<span class="hljs-keyword">bool</span> f = binary_search(nums.<span class="hljs-built_in">begin</span>()+l, nums.<span class="hljs-built_in">begin</span>()+r+<span class="hljs-number">1</span>, target); <span class="hljs-comment">//只查[l,r]也可以</span>
+<span class="hljs-comment">// low：用二分在已排序范围内查找第一个大于等于target的元素it，指result lower target。所以想查id得先用binary看有没有</span>
+<span class="hljs-keyword">int</span> index = lower_bound(nums.<span class="hljs-built_in">begin</span>(), nums.<span class="hljs-built_in">end</span>(), target) - nums.<span class="hljs-built_in">begin</span>(); <span class="hljs-comment">//也可找下标</span>
+
+<span class="hljs-comment">// 想一步看有无并target并得id，直接用low算了</span>
+<span class="hljs-keyword">auto</span> it = lower_bound(nums.<span class="hljs-built_in">begin</span>(), nums.<span class="hljs-built_in">end</span>(), target);
+<span class="hljs-built_in">if</span>(it!=nums.<span class="hljs-built_in">end</span>() &amp;&amp; *it == target) <span class="hljs-comment">// it不是end且值对了，就能用。 it-begin()就是下标</span>
+<span class="hljs-comment">//否则就没有</span>
+</code></pre><p>注意由于临界条件是l&gt;r，所以左边recur(l, mid-1)完全没问题，甚至比recur(l, mid)更好，因为后者在本题情况下可能死循环。</p>
+<p><a href="https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/description/">34. 在排序数组中查找元素的第一个和最后一个位置 - 力扣（LeetCode）</a></p>
+<h3 id="-"><em>链表操作</em>：本质还是指针操作。</h3>
+<ul>
+<li>链表：O-&gt;O-&gt;O-&gt;O。本质上指针ListNoed<em>是-&gt;，节点ListNode是O，每一个指针背后（指向地址所在处）都有一个实体节点O。所以在遍历中节点O本身并没有移动，而是迭代指针ListNoed</em> node在不断后移。节点指针迭代node = node-&gt;next是没有问题的。<strong>直接或间接出现node-&gt;next = node就是致命错误</strong>，node自成环进入了死循环。<strong>node是随迭代游走到最后的，不等于链表头结点。</strong></li>
+<li><strong>链表的生成顺序相反，先有尾后有头</strong>。初始化节点指针时要谨慎，要么新建一个节点取址赋值，要么找对节点指针用指针直接赋值。<strong>新建链表时最好新建哨兵头结点，迭代指针指向该结点在进行后续遍历迭代操作</strong>，不要用其余指针直接赋值给迭代指针，以防出现不同链表间错误连接或死循环的意外情况。</li>
+<li>nullptr布尔值为false。</li>
+<li>新建链表时需要new每一个节点再指向该节点，new的return就是指针，建节点最好new因为生命周期长。</li>
+</ul>
+<p>1、操作头结点可添加哑巴结点dummpy node指向头结点。（虽然我也没用）
+2、本题可用双指针，这是真的指针。fast比slow快n+1个，这样fast到底了slow正好倒数第n+1个。</p>
+<p>双指针还能判循环：fast一次两步，slow一次一步，相遇就有循环。</p>
+<p>通用思想：穿针引线。</p>
+<p><em>链表？指针数组！</em>
+转不动链表，我还转不动数组吗！</p>
+<h3 id="-">回溯：</h3>
+<p>回溯dfs什么的，凡是递归我都用recur命名了 </p>
+<p>用递归，但是直接递归到底，没有中间结果，直接找到结果存入数组。适用排列组合穷尽所有情况。</p>
+<p><em>回溯</em>：枚举就用回溯，也是一种遍历（不过不是常见的迭代for，而是递归方法。）既然是枚举就也是一种暴力解法。
+临时对象最终结算成真对象。
+回溯的结构是多叉树，每个节点包含（临时对象/结果）<strong><em>当前状态下的所有可选路</em></strong>（下一步的选择），for循环走遍所有可选路。做一个选择就会产生新的临时对象与对应可选路，此即回溯。
+优化：剪枝。</p>
+<pre><code>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">recur</span><span class="hljs-params">(临时对象，可选路)</span></span>{ <span class="hljs-comment">// 结算“临时对象”状态下所有“可选路”的结果。，函数作用就是直接实现目标：记录当前状态下所有结果。</span>
+        <span class="hljs-keyword">if</span>(结算条件){ <span class="hljs-comment">//结算临时对象（当前状态）</span>
+            结算进真对象集合；
+            <span class="hljs-keyword">return</span>；
+        }<span class="hljs-keyword">else</span>{
+            <span class="hljs-comment">// 选路时可加入剪枝优化</span>
+            <span class="hljs-keyword">for</span>(走遍所有可选路){
+                新临时对象 = 临时对象.选一条路。
+                recur(新临时对象，新可选路)；
+                反悔成旧临时对象。
+            }
+        }
+    }
+</code></pre><p><em>回溯套路</em></p>
+<pre><code><span class="hljs-function"><span class="hljs-title">recur</span><span class="hljs-params">(当前状态，全部待选)</span></span>｛
+    <span class="hljs-keyword">if</span>（当前状态到头了）｛
+        当前状态入结果。
+    ｝<span class="hljs-keyword">else</span>｛
+        <span class="hljs-keyword">for</span>(全部待选)｛ <span class="hljs-comment">// 有时还能剪枝</span>
+            新状态；新待选；
+            recur(新状态， 新待选)； 
+            旧状态；旧待选
+        ｝
+    ｝
+｝
+</code></pre><p>即遍历又增删，可用queue。即<strong>全部待选可用queue</strong>。</p>
+<p><em>回溯套路</em>。
+只不过这里的所有待选项不用for循环了，每一步撑死两个选项。不同的是在选择选项时就考虑了组合的合法性。（不过普通的回溯for也包含了合法性，这个合法性是用if实现的。）</p>
+<p>还是套模版，又是遍历待选项时多判断一下，这次是一个一个if。</p>
+<h3 id="-">遍历/循环：</h3>
+<p>存水最多的容器：遍历思路差最后一步成立：想到了从两边往中间挤并且移动低边界，但是卡在总想在此过程遇到答案边界处能停下来，即想在最佳结果处停下而省去遍历所有柱子。但并不是所有题目都能在最佳结果处停下，很多题目是<strong><em>要平等的遍历所有可能的最佳结果。然后在所有可能的最佳结果中保留下来真正的最佳结果即可</em></strong>。
+有时不需要在遍历可能结果时就顺带在最佳结果处停留下来，说穿了是<strong><em>关注点偏了，应该是关注直接结果</em></strong>（他要什么我关注什么）：容量最大，而不是在最佳柱子处停下来计算容量，本质上还是容量的计算与比较。
+不要只妄想停在最佳结果处省去部分遍历。</p>
+<p>双指针的方法是想到了。</p>
+<p><strong>还是循环处理点（比较前后两点）的情况：</strong></p>
+<ul>
+<li>容器可选queue</li>
+<li>while结构：可用哨兵节点dummy存前一点，与当前点比较，随后更新dummy并决定压入谁。循环条件可利用dummy判断。</li>
+</ul>
+<h3 id="-">分治思想？</h3>
+<p><em>归并排序</em>。
+本质在考归并排序：典型的分治思想，时间nlogn：分得层高logn；每层合并时都在遍历所有元素时间为n，故时间为nlogn。很优秀的算法，时间仅此快排，甚至更稳定。</p>
+<ul>
+<li>思想：先分后合。对半切，分别排序后合起来。</li>
+<li><p>实现：递归。</p>
+</li>
+<li><p>分：对于链表可快慢指针，fast一次两步slow一次一步，fast到头slow为中间。完成对半切</p>
+</li>
+<li>合：合并注意逻辑细节，合并时小[now]一直next到小[now]大于大[now]才停止，再把大[now]连到小[now]上。</li>
+</ul>
+<p>注意我一开始写的是插入排序，不是冒泡，时间太长。</p>
+<p><em>分治思想</em>。
+这题本质是个概念题。放在分治tag里倒也体现出了分治思想。
+分治不只在归并排序里体现，只是大问题分小问题这个思想就和递归非常搭，所以分治就基本都拿递归实现吧，清晰直接，倒也暂无例外。
+很大程度就是递归。。。吧</p>
+<h3 id="-">动态规划：</h3>
+<p><em>背包问题总结</em>
+（本题用回溯暴力解理论可行，但是回溯是O(n^2)，n过大时时间太长。）
+我的解法lastP严格讲不是dp，是只留下了dp里的成功，不过同样是2个for。
+传统dp[i]：s[0~i]能不能拆分。<em>**dp的设置直面问题，即要求的直接结果。
+</em></p>
+<p><strong>题目：一个背包固定容量A，面对B个东西，东西i的价值val[i]，占空间cost[i]，问背包最大能装多少钱。</strong></p>
+<ol>
+<li><p>01背包：每个东西只有一次。
+思路：容量为j，for东西，对东西i：要or不要。不要那包里的钱不变，要了那就要腾出空间算腾掉东西剩下的钱+i的钱，看这两种情况谁大要谁。<strong><em>需要考虑不同容量和不同可选东西情况下的最佳结果，故二维dp。（其实一维也可以）</em></strong></p>
+</li>
+<li><p>二维dp[i][j]：背包容量为j时，面对东西[0~i]，最大装的钱。时间本质：2个for所有容量和所有东西。</p>
+</li>
+</ol>
+<pre><code>for(int j = 0; j &lt;= A; j++) {  // 先for背包容量
+    for(int i = 1; i &lt;B; i++) { // 再for东西
+        if (j &lt; cost<span class="hljs-comment">[i]</span>) dp<span class="hljs-comment">[i]</span><span class="hljs-comment">[j]</span> = dp<span class="hljs-comment">[i - 1]</span><span class="hljs-comment">[j]</span>; // 当前容量放不下i就不放了
+        else dp<span class="hljs-comment">[i]</span><span class="hljs-comment">[j]</span> = max(dp<span class="hljs-comment">[i - 1]</span><span class="hljs-comment">[j]</span>, dp<span class="hljs-comment">[i - 1]</span><span class="hljs-comment">[j - cost<span class="hljs-comment">[i]</span>]</span> + val<span class="hljs-comment">[i]</span>); // 要么直接抄i-1，要么腾出空间来算收益val
+    }
+}
+</code></pre><ul>
+<li>一维dp：dp[j]：容量为j时的最大钱，一直面对所有东西。时间本质还是一样2个for，只是空间少用点。<strong><em>for顺序先东西后容量，且容量由大到小，才能保证东西不重复。</em></strong></li>
+</ul>
+<pre><code><span class="hljs-built_in">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; B; i++) { <span class="hljs-comment">// 一定先for东西。</span>
+            <span class="hljs-built_in">for</span>(<span class="hljs-keyword">int</span> j = A; j &gt;= cost[i]; j--) { <span class="hljs-comment">// 再for容量，一定由大到小。面对的东西一个个加，容量再又大到小，才能保证东西不重复。</span>
+        dp[j] = <span class="hljs-built_in">max</span>(dp[j], dp[j - cost[i]] + val[i]);
+
+    }
+}
+</code></pre><ol>
+<li><p>完全背包：每个东西无限用。
+思路：思路同01，只是在“要”的选项下：腾出空间不腾东西，即dp[i][j - cost[i]] + val[i]，而不是dp[i-1][j - cost[i]] + val[i]，因为前者肯定大于等于后者。</p>
+</li>
+<li><p>二维dp：只腾空间不腾东西：“要”时dp[i][j - cost[i]] + val[i]。其余同上。</p>
+</li>
+<li>一维dp：两个for顺序随便，因为东西可重复。其余同上。</li>
+</ol>
+<p><strong><em>1. 所以还是设置dp时直面问题，
+\2. 然后在遍历物品时更新dp
+\3. 更新dp要借助前面dp。</em></strong></p>
+<p>还是可行的，一时想不出来就多想想。</p>
+<p><em>至此理解了多维dp的含义</em>
+多维dp一般就是一维dp数组难以解决，很自然的想到二维dp数组存储中间状态，可以是网格式dp即正方形数组（常规解法），也可以是邻接表式dp，每个dp[i]有自己的数组情况（本题我的解法）。
+思路上：还是尽最大力直面结果，然后尽量找i与i-1，i+1的关系列方程什么的。本题直面结果确实不太好列dp。</p>
+<ul>
+<li>我解：我的选择了dp[i]：s[0...i]中以s[i]结尾的所有回文子串的长度，感觉比常解更直面问题。转移关键在算dp[i]要用dp[i-1]，比较s[i]和dp[i-1]里的回文前一个字符相等不决定+2否。</li>
+<li>常规解法：dp[i][j]：s[i...j]是不是回文，最后要最长的就找j-i最大的就行。转移关键在用到dp[i-1][j+1]
+实现上：初始化，遍历，for循环。</li>
+</ul>
+<p>dp总结：</p>
+<ul>
+<li>定含义：尽最大力直面结果。</li>
+<li>找关系：找i与i-1，i+1的递推关系。
+前两步最核心最关键的，不要因为方便初始化而想简化前两步，记住初始化排在含义与关系之后，是为之服务的，小心本末倒置。</li>
+<li>初始化：确定dp的递推方向，尤其是二维dp（右下，右上，左上，左下等等），再初始化与确定边界。</li>
+<li>递推完事。</li>
+</ul>
+<p><em>dp没设出来，看的答案</em>。 交错字符串
+思路上：直接按长度分解目标s3设dp不好设，从自变量s1,s2分解设dp：dp[i][j]：s1的前i个元素与s2前j个元素能否交叉组成s3的前i+j个元素。 学到的是<strong><em>因变量（直接结果）不好拆设dp，尝试自变量拆设dp因变量自然得解。</em></strong> dp递归关系与方向也自然得解。</p>
+<p>实现上：dp的定义很讲究，dp[i][j]：s1的前i个元素，注意不是s1[0..i]是s1[0..i-1]，巴拉巴拉（s2,s3同理）。通常我习惯直接按下表设ij，但是这里设前i个元素隐约包含了<em>s1[-1]</em>的用法，一种很好的边界用法，不需要额外初始化边界，dp[0][0]就表示s1,2前0个即没有元素能否组成s3前0个。如果按我常规使用i,j那么dp[0][j]，dp[i][0]的初始化很麻烦的。所以直接沿用原数据的下标设dp发现不好初始化时，考虑字面意思的用法“前/第/共等等”。</p>
+<p>Tips:</p>
+<ul>
+<li>设dp：因变量（直接结果）不好拆设dp，尝试自变量拆设dp</li>
+<li>初始化/实现dp：直接沿用原数据的下标设dp不好初始化，考虑字面意思的用法“前/第/共等等”。</li>
+<li>二维vector的定空间快速初始化：</li>
+</ul>
+<pre><code><span class="hljs-keyword">auto</span> v1 = <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;(<span class="hljs-number">5</span>,<span class="hljs-number">0</span>); <span class="hljs-comment">//类比这个</span>
+<span class="hljs-keyword">auto</span> dp = <span class="hljs-built_in">vector</span> &lt; <span class="hljs-built_in">vector</span> &lt;<span class="hljs-keyword">int</span>&gt; &gt; (s1.size() + <span class="hljs-number">1</span>, <span class="hljs-built_in">vector</span> &lt;<span class="hljs-keyword">int</span>&gt; (s2.size() + <span class="hljs-number">1</span>, <span class="hljs-literal">false</span>));
+</code></pre><p><em>dp没设出来。。。</em>
+思路：被题目骗了。本质不是word1变成word2一自一变；本质是word12都能变，目的是二者相等，所以其实可以是两个自变量。
+这样同上题一样，拆（这里应该叫截）两个自变量，分析dp与转移方程。</p>
+<ul>
+<li>设dp：直面问题没毛病，dp[i][j]：word1,2的前i,j个字符组成的串的编辑距离。</li>
+<li>找关系：找关系时不是看dp[i][j]内的值，而是看i,j代表的状态（word1,2的前i,j个），以此状态为目标，找能利用的不重复的所有“上一状态”，利用“上一状态”背后的dp更新当前dp。注意问题是最大/小/多/少的极端问题，往往需要从所有备选的“上一状态”dp求最值。</li>
+</ul>
+<p>同上一题，“前i个&quot;往往比“直接下标[0..i]个”好初始化，因为隐含了[-1]，代价就是前i个指[0..i-1]略不直观。</p>
+<p>没做出来点在设过dp，但是找关系没找对，过于细致分析i,j-1到i,j的情况，没想到直接min/max。
+不过说实话设dp和找关系本来相互影响。</p>
+<p>总结Tips:</p>
+<ul>
+<li>设dp：含义直面问题；下标截因变量，或所有自变量。</li>
+<li>找关系：不是看dp[i][j]的值，而是看i, j代表的状态，<strong><em>以本状态状态为“终点”</em></strong>，找<strong><em>能够利用的所有不重复“起点”</em></strong>，从备选中择最优。“起点”往往是i-1,j-1的几个状态，<strong><em>最值问题往往不需要分很清，直接min/max就行。</em></strong> <strong><em>一句话根据下标状态关系找dp数值关系。</em></strong></li>
+<li>初始化上，：[0...i-1]好于[0...i]。</li>
+</ul>
+<p>动归
+设dp：直面问题：dp[i]: 子数组num[...i]中的最大和，答案就是dp里的最大值。
+找关系：从“前一状态num[i-1]”到当前状态num[i]的关系，通常还需dp[i-1]的值才决定了dp[i]的值。加之本题是“最”类型，易max得dp。</p>
+<h3 id="-">位</h3>
+<p><em>位操作熟悉</em>
+unit32_t定义初始化（直接用十进制）。
+查“u32[i]”操作</p>
+<p><em>位操作相关</em>：
+uint8_t, uint16_t, uint32_t, uint64_t：8/16,/32/64位无符号整数。
+int8_t, int16_t, int32_t, int64_t：对应有符号整数。t是type，表明指定类型。
+本质上int和int32_t一般差不多。
+这些都需要<cstdint>。示例用uint8_t。
+uint与bool：本质都是看等于0否，是0就false否则一直true。</p>
+<pre><code>#include &lt;cstdint&gt;
+uint8_t a = <span class="hljs-number">0</span>b11001100;
+uint8_t b = <span class="hljs-number">0</span>b10101010;
+<span class="hljs-comment">// 初始化很重要，默认不一定全0，要显示初始化。</span>
+<span class="hljs-number">0</span>b二进制，<span class="hljs-number">0</span>八进制，<span class="hljs-number">0</span>x十六进制，其余都认定十进制。故不能直接<span class="hljs-number">010101110</span>这样。
+
+<span class="hljs-comment">// 基础操作，这些都不糊改a/b，需要接住</span>
+a &amp; b; <span class="hljs-comment">// 与</span>
+a | b; <span class="hljs-comment">// 或</span>
+a ^ b; <span class="hljs-comment">// 异或(异性恋正1， 同性错0)</span>
+~a; <span class="hljs-comment">// 取反</span>
+a &lt;&lt; <span class="hljs-number">2</span>; <span class="hljs-comment">//左移，补0。乘2</span>
+a &gt;&gt; <span class="hljs-number">2</span>; <span class="hljs-comment">//右移，补0/符号。除2</span>
+
+<span class="hljs-comment">// 常用操作：都是移动1或a相互&amp;|^</span>
+a |= (<span class="hljs-number">1</span> &lt;&lt; n);  <span class="hljs-comment">// 设置：把a的n号位（最低位是0）设为1。</span>
+a &amp;= ~(<span class="hljs-number">1</span> &lt;&lt; n);  <span class="hljs-comment">// 清除：把a的n号位（最低位是0）设为0。</span>
+a ^= (<span class="hljs-number">1</span> &lt;&lt; n);  <span class="hljs-comment">// 翻转：把a的3号位（最低位是0）翻转。</span>
+bool result = (a &gt;&gt; <span class="hljs-number">3</span>) &amp; <span class="hljs-number">1</span>; <span class="hljs-comment">// 检查：返回a的n号位。bool是一位</span>
+<span class="hljs-comment">// e.g. 1&lt;&lt;3：00000001000</span>
+</code></pre><p>bitset用法</p>
+<pre><code><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;bitset&gt;</span></span>
+<span class="hljs-comment">// 初始化：bits()默认全0，bits(a)可uint，bits(34)可十进制初，bits("0101010")可01string串</span>
+<span class="hljs-built_in">bitset</span>&lt;8&gt; bits(<span class="hljs-string">"10101010"</span>);  <span class="hljs-comment">// n位uint转bitset</span>
+<span class="hljs-keyword">static_cast</span>&lt;<span class="hljs-keyword">uint8_t</span>&gt;(bits.to_ulong()); <span class="hljs-comment">//bitset转uint：要先to_ulong()转成unsigned long再强制转成别的（unsigned long和unsigned int常常都是32位没啥区别）</span>
+<span class="hljs-comment">// 用法类似数组，下标0开始</span>
+<span class="hljs-keyword">bool</span> bit3 = bits[<span class="hljs-number">3</span>]; <span class="hljs-comment">// 获取第 3 位，单个类型为bool，类似char之于string</span>
+bits[<span class="hljs-number">3</span>] = <span class="hljs-number">0</span>;         <span class="hljs-comment">// 修改第 3 位为 0</span>
+bit1 &amp;|^~ bit2; <span class="hljs-comment">// 适用位操作</span>
+</code></pre><p><em>int也能位运算啊？？？</em> 异或想到了，就是只想到转成uint，没想到int能直接
+类型转换：</p>
+<ul>
+<li>显示类型转换：模版：typeB b = static_cast<typeB>(a)；，a是A类型，转为typeB类型。好处是编译时会检查，出错会报错。</li>
+<li>隐式类型转换：直接=。保证不溢出什么的能直接用。比如int和uint，当然要保证范围匹配，比如int是负的/uint超了int范围那结果肯定错。</li>
+</ul>
+<p>位操作不是uint的专利。这些都能用
+基本整数类型：
+int；unsigned int
+short；unsigned short
+long；unsigned long
+long long；unsigned long long
+字符类型：
+char
+unsigned char
+signed char
+固定宽度整数类型（来自 <cstdint>）：
+int8_t；uint8_t
+int16_t；uint16_t
+int32_t；uint32_t
+int64_t；uint64_t</p>
+<p>当然对于有符号要注意：
+&amp;|^~：所有位，包括符号位。
+&lt;&lt;：补0。
+>&gt;：补符号位。补什么不影响a&gt;&gt;31 &amp;1 取符号位。</p>
+<p><em>位知识</em>：</p>
+<ul>
+<li>int的&gt;&gt;也会移符号位，补位是符号位不影响移的那位，所以要得到符号位直接(a&gt;&gt;31)&amp;1是可以的。</li>
+<li>对类型的理解：int, uint32_t, long什么的<strong><em>本质存储都是一串二进制01</em></strong>，只是<strong><em>同样01串面对不同数据类型其解释不同</em></strong>，例如int的负数就解释为补码。赋值时完全可以0b二进制本质的赋，也可以十进制的赋，0x十六进制也行。顺便记住了Int范围是2^31，负比正多1。</li>
+<li>本题思路：想到三进制，自己造的vector三进制，for一遍num，每次for vector。答案相当于for一遍vector，每次for num，本质无疑但是答案存答案与输出简单。</li>
+<li>将int看做二进制处理时，处理完不用管回十进制，因为始终是int</li>
+</ul>
+<h3 id="-">图</h3>
+<p><strong><em>我他妈再改原图数据就是傻逼！！！！！！！！！！！！！！！！！！</em></strong></p>
+<p>今天状态滂臭。。。明明很简单的思路硬是熬了两个多小时。想死o(╥﹏╥)o
+本题思路：一次遍历不好办，还是从边界O起手标记所有连到的O，再遍历一遍把标记的都设O，别的都X。</p>
+<p>本题上三大错误点：起点问题是最核心的！</p>
+<ul>
+<li>起点没做选择：起点没选择，所有O都当起点导致重复dfs太多超时。</li>
+<li>不想二次遍历：只想一次遍历，回溯时一次只能确定一个O是否是结果，其实重复浪费了大量路径。</li>
+<li><strong><em>回溯忘撤销点的处理：导致死胡同路上的点没被掰回来</em></strong>，很严重。</li>
+</ul>
+<p><em>dfs和回溯的差异？</em> 好吧其实基本没有区别，只是场景不同侧重操作不同。</p>
+<ul>
+<li>原数据更改：dfs侧重访问，标记；回溯侧重记录路径。这个场景导致回溯不会更改原数据nums，而dfs可能会更改原数据graph。但是更改原数据挺危险的，所以还是<strong><em>建议dfs以后也另外存结果吧</em></strong>。</li>
+<li>起点选择：回溯一般为枚举，起点要全覆盖。<strong><em>dfs有时可筛选出候选起点</em></strong>，不用整个图都起点一遍（很多点就不可能对），这样大大降低整体时间。（单个点的recur时间不会变，这是recur结构决定的）</li>
+</ul>
+<p>总结：<strong><em>dfs额外注意的也就起点的选择，避免轻易改原图（即也存放结果吧）。</em></strong></p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dfs</span><span class="hljs-params">(参数)</span> </span>{ <span class="hljs-comment">//还是回溯同款没问题</span>
+    <span class="hljs-keyword">if</span> (终止条件) {
+        存放结果; 
+        <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-keyword">for</span> (可选点) {
+        处理节点/加入temp结果;
+        dfs(图，选择的节点); <span class="hljs-comment">// 递归</span>
+        回溯，撤销处理结果
+    }
+}
+</code></pre><p><em>拓扑排序</em>。一般的拓扑排序是给出一种顺序，这个只判断有没有顺序可得。
+思路上：由于本题只是看有没有顺序可得，故本质上是找有没有环，包括自环和他环。
+实现上：</p>
+<ul>
+<li>容器选择：答案是边点分开存，我放一个map里效果是一样的，我觉得我的map好。</li>
+<li>起点选择：由于本题只要有没有顺序，故从任意未访问点开始就行，非必要从入度=0开始。</li>
+<li>架构：还是dfs，只不过访问记录visited有三种状态：</li>
+<li>0未访问，用于找访问起点。</li>
+<li>1正在访问，用于判断有无环。</li>
+<li>2访问过，就是标记访问过防止重复访问，要顺序的话就是2的顺序逆序。
+另外flag在找到环时直接false，return到最终结果。</li>
+</ul>
+<p>好算法体现出来的思路一定是清晰的。
+腾讯用的ACM模式：输入输出自己写。牛客，POJ，AOJ都是ACM模式。
+方法/工具有两种：迭代(for, while)，递归。
+递归结构：先考虑结算/边界条件。再考虑递归逻辑：从上往下，从结果到开始。其实都差不多
+递归这个工具可以实现很多思想：树遍历，回溯，分治，快速幂（也是一种分治）等。
+并查集</p>
+</body></html>
